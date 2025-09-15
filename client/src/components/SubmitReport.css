@@ -1,0 +1,144 @@
+/* Ensure you have these variables defined in a global stylesheet like index.css */
+:root {
+  --primary-color: #6a11cb;
+  --secondary-color: #2575fc;
+  --background-color: #f4f7f6;
+  --text-color: #333;
+  --card-background: #ffffff;
+  --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  --error-color: #e74c3c;
+}
+
+.report-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+}
+
+.report-form-wrapper {
+  max-width: 500px;
+  width: 100%;
+  background: var(--card-background);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.report-title {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+.report-location {
+  text-align: center;
+  color: #777;
+  margin-bottom: 25px;
+  font-size: 0.9rem;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 18px; /* Adjusted for better vertical alignment */
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+.input-icon.textarea-icon {
+  top: 20px; /* Align with first line of textarea */
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+textarea.input-field {
+  resize: vertical;
+  padding-top: 12px;
+}
+
+/* Custom Image Upload Button */
+.image-upload-input {
+  display: none; /* Hide the default input */
+}
+
+.image-upload-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #777;
+}
+
+.image-upload-label:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* Image Preview */
+.image-preview-container {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+  opacity: 0.9;
+  box-shadow: var(--shadow);
+}
+
+.error-text {
+  color: var(--error-color);
+  font-size: 0.8rem;
+  padding-left: 5px;
+  margin-top: 5px;
+}

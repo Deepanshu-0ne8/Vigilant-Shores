@@ -1,0 +1,173 @@
+/* --- CSS Variables for easy theming --- */
+:root {
+  --primary-color: #6a11cb;
+  --secondary-color: #2575fc;
+  --background-color: #f4f7f6;
+  --text-color: #333;
+  --card-background: #ffffff;
+  --footer-background: #2c3e50;
+  --footer-text-color: #ecf0f1;
+  --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.home-container {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+/* --- Hero Section --- */
+.hero-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 100px 20px;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: white;
+}
+
+.hero-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+  opacity: 0.9;
+}
+
+/* --- Buttons --- */
+.cta-button {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+}
+
+.cta-button.primary {
+  background-color: #fff;
+  color: var(--primary-color);
+}
+
+.cta-button.primary:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-3px);
+}
+
+.cta-button.secondary {
+  background-color: var(--secondary-color);
+  color: #fff;
+  border: 2px solid #fff;
+}
+
+.cta-button.secondary:hover {
+    background-color: #fff;
+    color: var(--secondary-color);
+    transform: translateY(-3px);
+}
+
+
+/* --- Features Section --- */
+.features-section {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: var(--card-background);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.feature-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* --- CTA Section --- */
+.cta-section {
+    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+    color: white;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.cta-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+}
+
+/* --- Footer --- */
+.home-footer {
+  background-color: var(--footer-background);
+  color: var(--footer-text-color);
+  padding: 20px;
+  max-height: 50px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  color: var(--footer-text-color);
+  margin: 0 10px;
+  font-size: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: var(--secondary-color);
+}
+
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .home-footer {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
