@@ -1,0 +1,110 @@
+/* Ensure you have these variables defined, perhaps in your index.css or App.css */
+:root {
+  --primary-color: #6a11cb;
+  --secondary-color: #2575fc;
+  --background-color: #f4f7f6;
+  --text-color: #333;
+  --card-background: #ffffff;
+  --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  --error-color: #e74c3c;
+}
+
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+}
+
+.signup-form-wrapper {
+  max-width: 400px;
+  width: 100%;
+  background: var(--card-background);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.signup-title {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+.signup-location {
+  text-align: center;
+  color: #777;
+  margin-bottom: 25px;
+  font-size: 0.9rem;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 15px 12px 45px; /* Left padding for icon */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.signup-button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.signup-button:hover {
+  opacity: 0.9;
+  box-shadow: var(--shadow);
+}
+
+.error-text {
+  color: var(--error-color);
+  font-size: 0.8rem;
+  padding-left: 5px;
+  margin-top: 5px;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  color: #555;
+}
+
+.login-link a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
