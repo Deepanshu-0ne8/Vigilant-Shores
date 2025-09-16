@@ -23,13 +23,17 @@ const reportSchema = new mongoose.Schema(
             required: true
         },
         coordinates: {
-            type: [Number], // [longitude, latitude]
+            type: [Number],
             required: true
         }
     },
    image: {
-    url: { type: String },        
-    public_id: { type: String }
+    url: { type: String }
+   },
+   user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
    }
 },
 {
