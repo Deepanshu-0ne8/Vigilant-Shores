@@ -6,87 +6,108 @@ import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js";
 
 export const signUp = async (req, res, next) => {
     const session = await mongoose.startSession();
-    session.startTransaction();
-    try {
-        const {name, email, password} = req.body;
 
-        //check if user already exists
+    try {
+        const { name, email, password, role } = req.body;
 
         const existingUser = await User.findOne({ email });
-
-        if(existingUser) {
-            const error = new Error("User already exists");
+        if (existingUser) {
+            const error = new Error("A user with this email already exists.");
             error.statusCode = 409;
             throw error;
         }
 
-        // hash password
+        session.startTransaction();
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const newUsers = await User.create([{name, email, password: hashedPassword}], { session });
+        const user = new User({
+            name,
+            email,
+            role,
+            password: hashedPassword
+        });
+        await user.save({ session });
 
-        const token = jwt.sign({userId: newUsers[0]._id}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
-        session.commitTransaction();
-        session.endSession();
+        await session.commitTransaction();
 
-        res.status(201).cookie("token", token, { httpOnly: true, sameSite: "strict", maxAge: 24 * 60 * 60 * 1000 }).json({
+        user.password = undefined;
+
+        res.status(201).cookie("token", token, {
+            httpOnly: true,
+            sameSite: "strict",
+            maxAge: 24 * 60 * 60 * 1000
+        }).json({
             success: true,
             message: "User created successfully",
             data: {
-                user: newUsers[0]
+                user
             }
         });
     } catch (error) {
-        await session.abortTransaction();
-        session.endSession();
-        next(error);
+        // THE FIX: Only abort the transaction if it was actually started.
+        if (session.inTransaction()) {
+            await session.abortTransaction();
+        }
+        next(error); // Pass errors to your central error handler
+    } finally {
+        await session.endSession();
     }
-}
+};
 
 export const signIn = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email});
-        if(!user) {
-            const error = new Error("User does not exist");
-            error.statusCode = 404;
-            throw error;
-        }
 
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
-        if(!isPasswordCorrect) {
-            const error = new Error("Invalid Password");
+        // 1. Explicitly select the password field if it's excluded by default in your schema.
+        const user = await User.findOne({ email }).select('+password');
+
+        // 2. Use a generic error message to prevent user enumeration attacks.
+        if (!user) {
+            const error = new Error("Invalid credentials");
             error.statusCode = 401;
             throw error;
         }
 
-        const token = jwt.sign({ userId: user._id}, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN});
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            const error = new Error("Invalid credentials");
+            error.statusCode = 401;
+            throw error;
+        }
 
-        res.status(200).cookie("token", token, { httpOnly: true, sameSite: "strict", maxAge: 24 * 60 * 60 * 1000 }).json({
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+
+        // 3. CRITICAL SECURITY FIX: Remove the password before sending the response.
+        user.password = undefined;
+
+        res.status(200).cookie("token", token, {
+            httpOnly: true,
+            sameSite: "strict",
+            maxAge: 24 * 60 * 60 * 1000
+        }).json({
             success: true,
             message: "User signed in successfully",
             data: {
                 user
             }
         });
-
     } catch (error) {
         next(error);
     }
-}
-
-
+};
 
 export const signOut = async (req, res, next) => {
     try {
-        res.status(200).cookie("token", "", { maxAge: 0 }).json({
+        // Use res.clearCookie() for a cleaner, more explicit way to log out.
+        res.clearCookie("token").status(200).json({
             success: true,
-            message: "logged out"
+            message: "Logged out successfully"
         });
     } catch (error) {
-        console.log(error);
         next(error);
     }
-}
+};

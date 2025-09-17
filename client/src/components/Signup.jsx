@@ -1,22 +1,23 @@
 import React, { useState } from "react";
-import "./SignUp.css"; // We'll create this file next
+import "./SignUp.css";
 import { FaUser, FaEnvelope, FaLock, FaUserTag } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import { USER_API_ENDPOINT } from "../utils/constant";
 
 const Signup = () => {
   const navigate = useNavigate();
-  // State for form fields
+
   const [formData, setFormData] = useState({
-    username: "",
+    name: "",
     email: "",
+    role: "",
     password: "",
-    confirmPassword: "",
   });
 
-  // State for validation errors
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -25,10 +26,10 @@ const Signup = () => {
     });
   };
 
-  // Validate the form data
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.username) newErrors.username = "Username is required";
+    // Correction 1: Updated validation message for clarity
+    if (!formData.name) newErrors.name = "Name is required";
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -40,26 +41,37 @@ const Signup = () => {
     } else if (formData.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
     }
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
     return newErrors;
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
-    // If there are no errors, proceed with form submission
-    if (Object.keys(validationErrors).length === 0) {
-      console.log("Form submitted successfully:", formData);
-      // Here you would typically send the data to a server
-      // Reset form or redirect user
-      navigate("/dashboard"); // Redirect to dashboard after successful signup
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${USER_API_ENDPOINT}/register`,
+        formData
+      );
+
+      console.log("Registration successful:", response.data);
+      alert("Registration successful! Please log in.");
+
+      navigate("/login");
+    } catch (error) {
+      console.error("Registration failed:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        "Registration failed. Please try again.";
+      setErrors({ api: errorMessage });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,18 +82,22 @@ const Signup = () => {
           <h2 className="signup-title">Create Your Account</h2>
           <p className="signup-location">📍 Prayagraj, India</p>
 
-          {/* Username Field */}
+          {errors.api && <p className="error-text api-error">{errors.api}</p>}
+
+          {/* Name Field */}
           <div className="input-group">
             <FaUser className="input-icon" />
             <input
               type="text"
-              name="username"
+              // Correction 2: Changed name attribute to match state
+              name="name"
               className="input-field"
-              placeholder="Username"
-              value={formData.username}
+              // Correction 3: Updated placeholder to match
+              placeholder="Name"
+              value={formData.name}
               onChange={handleChange}
             />
-            {errors.username && <p className="error-text">{errors.username}</p>}
+            {errors.name && <p className="error-text">{errors.name}</p>}
           </div>
 
           {/* Email Field */}
@@ -98,12 +114,12 @@ const Signup = () => {
             {errors.email && <p className="error-text">{errors.email}</p>}
           </div>
 
-          {/* Role field */}
+          {/* Role Field */}
           <div className="input-group">
-            <FaUserTag className="input-icon" /> {/* Using a different icon */}
+            <FaUserTag className="input-icon" />
             <select
               name="role"
-              className="input-field" // Reusing the same class for consistent styling
+              className="input-field"
               value={formData.role}
               onChange={handleChange}
             >
@@ -130,28 +146,12 @@ const Signup = () => {
             {errors.password && <p className="error-text">{errors.password}</p>}
           </div>
 
-          {/* Confirm Password Field */}
-          <div className="input-group">
-            <FaLock className="input-icon" />
-            <input
-              type="password"
-              name="confirmPassword"
-              className="input-field"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-            {errors.confirmPassword && (
-              <p className="error-text">{errors.confirmPassword}</p>
-            )}
-          </div>
-
-          <button type="submit" className="signup-button">
-            Sign Up
+          <button type="submit" className="signup-button" disabled={loading}>
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
 
           <p className="login-link">
-            Already have an account? <a href="/login">Log In</a>
+            Already have an account? <Link to="/login">Log In</Link>
           </p>
         </form>
       </div>

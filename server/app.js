@@ -4,8 +4,16 @@ import authRouter from './routes/auth.routes.js';
 import reportRouter from './routes/report.routes.js';
 import connectDB from './database/mongodb.js';
 import cookieParser from "cookie-parser";
+import cors from 'cors';
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Replace with your frontend URL
+    credentials: true,
+  })
+)
 
 app.use(express.json());
 app.use(cookieParser());
