@@ -1,0 +1,1 @@
+export const USER_API_ENDPOINT = "http://localhost:7968/api/v1/auth";

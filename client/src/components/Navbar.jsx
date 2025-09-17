@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const user = true; // Replace with actual user state management
+  const user = false; // Replace with actual user state management
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -31,7 +31,6 @@ const Navbar = () => {
 
           {/* Desktop Menu Links */}
           <div className="hidden md:flex md:items-center md:space-x-8">
-            <Link to='/dashboard' className="text-slate-600 hover:text-blue-600 font-medium">Dashboard</Link>
             <Link to='/about' className="text-slate-600 hover:text-blue-600 font-medium">About</Link>
             {user && <Link to='/profile' className="text-slate-600 hover:text-blue-600 font-medium">Profile</Link>}
           </div>
@@ -40,6 +39,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <>
+              <Link to='/dashboard' className="text-slate-600 hover:text-blue-600 font-medium">Dashboard</Link>
                 <span className="text-sm text-slate-500">Welcome, {user.email}</span>
                 <button 
                     className="text-sm font-medium text-slate-600 hover:text-blue-600"
