@@ -7,6 +7,8 @@ import SubmitReport from "./components/SubmitReport";
 import Dashboard from "./components/Dashboard";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import ProtectedRoute from "./components/ProtectedRoutes.jsx";
 
 const appRouter = createBrowserRouter([
   {
@@ -22,26 +24,36 @@ const appRouter = createBrowserRouter([
     element: <Signup />,
   },
   {
-    path: "/report/submit",
-    element: <SubmitReport />,
-  },
-  {
-    path: "/dashboard",
-    element: <Dashboard />,
-  },
-  {
-    path: "/profile",
-    element: <Profile />,
-  },
-  {
     path: "/login",
     element: <Login />,
+  },
+  // --- Protected Routes ---
+  // 2. Create a parent route that uses ProtectedRoute as its element.
+  {
+    element: <ProtectedRoute />,
+    // 3. Nest all the routes you want to protect inside its `children` array.
+    children: [
+      {
+        path: "/report/submit",
+        element: <SubmitReport />,
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+    ],
   },
 ]);
 function App() {
   return (
     <>
-      <RouterProvider router={appRouter} />
+      <AuthProvider>
+        <RouterProvider router={appRouter} />
+      </AuthProvider>
     </>
   );
 }

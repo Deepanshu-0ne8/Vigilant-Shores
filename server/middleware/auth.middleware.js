@@ -11,7 +11,7 @@ export const authorize = async (req, res, next) => {
                 message : "User is not Authenticated"
             })
         }
-        const decode = await jwt.verify(token, JWT_SECRET);
+        const decode = jwt.verify(token, JWT_SECRET);
         if(!decode)
         {
             return res.status(401).json({
