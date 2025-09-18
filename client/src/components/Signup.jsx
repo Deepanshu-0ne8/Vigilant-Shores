@@ -63,7 +63,7 @@ const Signup = () => {
       console.log("Registration successful:", response.data);
       alert("Registration successful! Please log in.");
 
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.error("Registration failed:", error);
       const errorMessage =
@@ -76,84 +76,104 @@ const Signup = () => {
   };
 
   return (
-    <div className="signup-container">
-      <div className="signup-form-wrapper">
-        <form className="signup-form" onSubmit={handleSubmit} noValidate>
-          <h2 className="signup-title">Create Your Account</h2>
-          <p className="signup-location">📍 Prayagraj, India</p>
-
-          {errors.api && <p className="error-text api-error">{errors.api}</p>}
-
-          {/* Name Field */}
-          <div className="input-group">
-            <FaUser className="input-icon" />
-            <input
-              type="text"
-              // Correction 2: Changed name attribute to match state
-              name="name"
-              className="input-field"
-              // Correction 3: Updated placeholder to match
-              placeholder="Name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-            {errors.name && <p className="error-text">{errors.name}</p>}
+    <div className="relative">
+      <div className="absolute top-6 left-6">
+        <Link to="/" className="text-2xl font-bold text-[#1E3A8A]">
+          <div className="flex items-center gap-2">
+            <span>
+              <img
+                className="w-12 h-12 border rounded-full"
+                src="/logo.png"
+                alt="Logo"
+              />
+            </span>
+            <span>
+              Vigilant<span className="text-blue-400">Shores</span>
+            </span>
           </div>
+        </Link>
+      </div>
+      <div className="signup-container">
+        <div className="signup-form-wrapper">
+          <form className="signup-form" onSubmit={handleSubmit} noValidate>
+            <h2 className="signup-title">Create Your Account</h2>
+            <p className="signup-location">📍 Prayagraj, India</p>
 
-          {/* Email Field */}
-          <div className="input-group">
-            <FaEnvelope className="input-icon" />
-            <input
-              type="email"
-              name="email"
-              className="input-field"
-              placeholder="Email Address"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            {errors.email && <p className="error-text">{errors.email}</p>}
-          </div>
+            {errors.api && <p className="error-text api-error">{errors.api}</p>}
 
-          {/* Role Field */}
-          <div className="input-group">
-            <FaUserTag className="input-icon" />
-            <select
-              name="role"
-              className="input-field"
-              value={formData.role}
-              onChange={handleChange}
-            >
-              <option value="" disabled>
-                Select a Role...
-              </option>
-              <option value="citizen">Citizen</option>
-              <option value="analyst">Analyst</option>
-            </select>
-            {errors.role && <p className="error-text">{errors.role}</p>}
-          </div>
+            {/* Name Field */}
+            <div className="input-group">
+              <FaUser className="input-icon" />
+              <input
+                type="text"
+                // Correction 2: Changed name attribute to match state
+                name="name"
+                className="input-field"
+                // Correction 3: Updated placeholder to match
+                placeholder="Name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+              {errors.name && <p className="error-text">{errors.name}</p>}
+            </div>
 
-          {/* Password Field */}
-          <div className="input-group">
-            <FaLock className="input-icon" />
-            <input
-              type="password"
-              name="password"
-              className="input-field"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-            {errors.password && <p className="error-text">{errors.password}</p>}
-          </div>
+            {/* Email Field */}
+            <div className="input-group">
+              <FaEnvelope className="input-icon" />
+              <input
+                type="email"
+                name="email"
+                className="input-field"
+                placeholder="Email Address"
+                value={formData.email}
+                onChange={handleChange}
+              />
+              {errors.email && <p className="error-text">{errors.email}</p>}
+            </div>
 
-          <button type="submit" className="signup-button" disabled={loading}>
-            {loading ? "Signing Up..." : "Sign Up"}
-          </button>
+            {/* Role Field */}
+            <div className="input-group">
+              <FaUserTag className="input-icon" />
+              <select
+                name="role"
+                className="input-field"
+                value={formData.role}
+                onChange={handleChange}
+              >
+                <option value="" disabled>
+                  Select a Role...
+                </option>
+                <option value="citizen">Citizen</option>
+                <option value="analyst">Analyst</option>
+              </select>
+              {errors.role && <p className="error-text">{errors.role}</p>}
+            </div>
 
-          <p className="login-link">
-            Already have an account? <Link to="/login">Log In</Link>
-          </p>
-        </form>
+            {/* Password Field */}
+            <div className="input-group">
+              <FaLock className="input-icon" />
+              <input
+                type="password"
+                name="password"
+                className="input-field"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              {errors.password && (
+                <p className="error-text">{errors.password}</p>
+              )}
+            </div>
+
+            <button type="submit" className="signup-button" disabled={loading}>
+              {loading ? "Signing Up..." : "Sign Up"}
+            </button>
+
+            <p className="login-link">
+              Already have an account? <Link to="/login">Log In</Link>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );
