@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import axios from "axios"; // 1. Import axios
-import { USER_API_ENDPOINT } from "../utils/constant";
 import { useAuth } from "../context/AuthContext";
 
 

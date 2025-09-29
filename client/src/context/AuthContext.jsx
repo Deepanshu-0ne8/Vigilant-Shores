@@ -1,8 +1,8 @@
 // src/context/AuthContext.jsx
 
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { USER_API_ENDPOINT } from '../utils/constant';
+import React, { createContext, useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { USER_API_ENDPOINT } from "../utils/constant";
 
 const AuthContext = createContext(null);
 
@@ -36,7 +36,8 @@ export const AuthProvider = ({ children }) => {
       email,
       password,
     });
-    
+    console.log("User session found:", response.data);
+
     // If the API call is successful, update the user state
     if (response.data.success) {
       setUser(response.data.data.user);

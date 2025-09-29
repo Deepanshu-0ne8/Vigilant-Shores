@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./components/Home";
 import About from "./components/About";
@@ -9,6 +8,11 @@ import Profile from "./components/Profile";
 import Login from "./components/Login";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoutes.jsx";
+import { LocationProvider } from "./context/LocationContext.jsx";
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
+
 
 const appRouter = createBrowserRouter([
   {
@@ -52,7 +56,9 @@ function App() {
   return (
     <>
       <AuthProvider>
-        <RouterProvider router={appRouter} />
+        <LocationProvider>
+          <RouterProvider router={appRouter} />
+        </LocationProvider>
       </AuthProvider>
     </>
   );
