@@ -4,12 +4,12 @@ import { createReport, deleteReport, getAllReports, getReportById } from '../con
 
 const reportRouter = express.Router();
 
-reportRouter.get('/', authorize , getAllReports);
+reportRouter.get('/get', authorize , getAllReports);
 
-reportRouter.get('/:id', authorize, getReportById);
+reportRouter.get('/get/:id', authorize, getReportById);
 
-reportRouter.delete('/:id', authorize, deleteReport);
+reportRouter.delete('/delete/:id', authorize, deleteReport);
 
-reportRouter.post('/', authorize, createReport);
+reportRouter.post('/create', authorize, createReport);
 
 export default reportRouter;

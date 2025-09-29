@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useLocation } from "../context/LocationContext.jsx";
 
 // This component expects two props:
 // 1. user: An object containing user data if logged in, otherwise null.
@@ -8,7 +9,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const { location } = useLocation();
   const { user, logout } = useAuth(); // Replace with actual user state management
 
   const toggleMobileMenu = () => {
@@ -67,6 +68,14 @@ const Navbar = () => {
               </>
             )}
           </div>
+
+          {/* Display location if it exists */}
+          {location && (
+            <div className="hidden md:block text-sm text-green-600">
+              📍 Location: {location.latitude.toFixed(2)},{" "}
+              {location.longitude.toFixed(2)}
+            </div>
+          )}
 
           {/* Desktop Auth Buttons & CTA */}
           <div className="hidden md:flex items-center space-x-4">

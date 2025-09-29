@@ -18,7 +18,7 @@ authRouter.get('/profile', authorize, (req, res) => {
   res.status(200).json({
     success: true,
     data: {
-      user: req.user 
+      user: req.user
     }
   });
 });

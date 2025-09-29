@@ -5,7 +5,7 @@ const reportSchema = new mongoose.Schema(
     title: { 
         type: String,
         required: [true, "Report title is required"],
-        enum: ['Tsunami', 'Hurricane', 'Coastal Flooding', 'Typhoon', 'Cyclone', 'Storm Surge', 'Errosion', 'Oil spill', 'Red Tide'],
+        enum: ['Tsunami', 'Hurricane', 'Coastal Flooding', 'Typhoon', 'Cyclone', 'Storm Surge', 'Erosion', 'Oil spill', 'Red Tide'],
     },
     description: {
         type: String,
@@ -30,7 +30,7 @@ const reportSchema = new mongoose.Schema(
    image: {
     url: { type: String }
    },
-   user: {
+   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
