@@ -28,7 +28,9 @@ const reportSchema = new mongoose.Schema(
         }
     },
    image: {
-    url: { type: String }
+    url: { type: String,
+        required: [true, "Image URL is required"]
+     }
    },
    createdBy: {
     type: mongoose.Schema.Types.ObjectId,
