@@ -9,7 +9,7 @@ const reportRouter = express.Router();
 reportRouter.post(
     '/create', 
     authorize, 
-    upload.single('file'), // Middleware to handle single file upload
+    upload.single('reportImage'), // Middleware to handle single file upload
     createReport
 );
 

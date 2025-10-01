@@ -47,13 +47,38 @@ export const createReport = async (req, res, next) => {
     }
 }
 
-export const getAllReports = async (req, res, next) => {
+// export const getAllReports = async (req, res, next) => {
+//     try {
+//         const reports = await Report.find();
+//         res.status(200).json({
+//             status: 'success',
+//             data: reports
+//         });
+//     } catch (error) {
+//         next(error)
+//     }
+// }
+
+//changed get all reports to get reports by user
+
+export const getAllReports = async (req, res,next) => {
     try {
-        const reports = await Report.find();
-        res.status(200).json({
-            status: 'success',
-            data: reports
-        });
+        const userId = req.id;
+        const report = await Report.find({ createdBy: userId }).populate({
+            path: 'createdBy',
+            options: { sort: { createdAt: -1 } },    
+        })
+        if (!report) {
+            return res.status(404).json({
+                message: "No applicaion found",
+                success: false
+            })
+        }
+        return res.status(200).json({
+            report,
+            success: true
+        })
+
     } catch (error) {
         next(error)
     }
