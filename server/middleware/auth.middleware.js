@@ -1,27 +1,36 @@
 import { JWT_SECRET } from "../config/env.js";
 import jwt from "jsonwebtoken";
+import User from "../models/user.model.js";
 
 export const authorize = async (req, res, next) => {
     try {
         const token = req.cookies.token;
-        if(!token)
-        {
+        if (!token) {
             return res.status(401).json({
-                success : false,
-                message : "User is not Authenticated"
+                success: false,
+                message: "User is not Authenticated"
             })
         }
         const decode = jwt.verify(token, JWT_SECRET);
-        if(!decode)
-        {
+        if (!decode) {
             return res.status(401).json({
-                success : false,
-                message : "Invalid Token"
+                success: false,
+                message: "Invalid Token"
             })
         }
+
+        //slight change in middleware to fetch user data -   chetan
+        const user = await User.findById(decode.userId).select("-password");
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        req.user = user;  // <-- so /profile can return it
         req.id = decode.userId;
         next();
     } catch (error) {
-        res.status(401).json({ message: 'Unauthorized' ,error: error.message }); 
+        res.status(401).json({ message: 'Unauthorized', error: error.message });
     }
 }

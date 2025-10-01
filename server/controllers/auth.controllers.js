@@ -36,10 +36,10 @@ export const signUp = async (req, res, next) => {
 
         user.password = undefined;
 
-        res.status(201).cookie("token", token, {
+        res.cookie("token", token, {
             httpOnly: true,
             sameSite: "strict",
-            maxAge: 24 * 60 * 60 * 1000
+            maxAge: 24 * 60 * 60 * 1000,
         }).json({
             success: true,
             message: "User created successfully",
@@ -84,7 +84,7 @@ export const signIn = async (req, res, next) => {
         // 3. CRITICAL SECURITY FIX: Remove the password before sending the response.
         user.password = undefined;
 
-        res.status(200).cookie("token", token, {
+        res.cookie("token", token, {
             httpOnly: true,
             sameSite: "strict",
             maxAge: 24 * 60 * 60 * 1000
@@ -111,3 +111,20 @@ export const signOut = async (req, res, next) => {
         next(error);
     }
 };
+export const getProfile = async (req, res, next) => {
+    try {
+        // If the request reaches this point, the `protect` middleware has already
+        // verified the JWT and attached the user's data to `req.user`.
+
+        // All we need to do is send that user object back to the client.
+        res.status(200).json({
+            success: true,
+            data: {
+                user: req.user
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+

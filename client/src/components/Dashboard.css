@@ -107,6 +107,13 @@
 .status-verified {
   background-color: #d3da16; /* Orange */
 }
+.report-image {
+  width: 80px;         /* Set a fixed width */
+  height: 60px;        /* Set a fixed height */
+  object-fit: cover;   /* This ensures the image covers the area without distortion */
+  border-radius: 8px;  /* Optional: gives the images rounded corners */
+  display: block;      /* Helps with alignment */
+}
 
 /* --- Responsive Design for smaller screens --- */
 @media (max-width: 768px) {

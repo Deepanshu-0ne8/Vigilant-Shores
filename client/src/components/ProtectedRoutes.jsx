@@ -1,25 +1,20 @@
-// src/components/ProtectedRoute.jsx
-
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Import your auth hook
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const ProtectedRoute = () => {
-  const { user, loading } = useAuth(); // Get user and loading state from context
+  const { user, loading } = useAuth();
 
-  // 1. While the context is checking for an existing session, show a loading message.
+  // Wait until AuthContext finishes checking
   if (loading) {
     return <div>Loading session...</div>;
   }
 
-  // 2. If loading is finished and there is a user, render the child route.
-  // The <Outlet> component is a placeholder for the actual page (e.g., Dashboard).
+  // Only after loading, decide
   if (user) {
     return <Outlet />;
   }
 
-  // 3. If loading is finished and there's no user, redirect to the login page.
-  return <Navigate to="/login" />;
+  return <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;

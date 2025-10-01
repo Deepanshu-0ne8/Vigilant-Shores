@@ -1,88 +1,33 @@
 import React, { useState, useEffect } from "react";
-import "./Dashboard.css";
+import axios from "axios";
+import "./Dashboard.css"; // Ensure you have this CSS file
 import Navbar from "./Navbar";
-
-// --- Mock Data: In a real app, this would come from an API ---
-const mockReportsData = [
-  {
-    id: "REP-001",
-    userName: "Ravi Kumar",
-    userEmail: "ravi.k@example.com",
-    reportType: "Coastal Flooding",
-    date: "2025-09-15",
-    status: "In Progress", // New reports would be in progress
-    details: "Water from the high tide has entered the main market road. It's about knee-deep now.",
-    location: { lat: 17.3850, lng: 78.4867 } // Example: Hyderabad (for variety, though not coastal)
-  },
-  {
-    id: "REP-002",
-    userName: "Priya Sharma",
-    userEmail: "priya.s@example.com",
-    reportType: "High Waves",
-    date: "2025-09-15",
-    status: "Pending", // Awaiting verification
-    details: "The waves are crashing over the seawall near the fisherman's colony. It's very dangerous.",
-    location: { lat: 12.9716, lng: 77.5946 } // Example: Bengaluru
-  },
-  {
-    id: "REP-003",
-    userName: "Anjali Das",
-    userEmail: "anjali.d@example.com",
-    reportType: "Infrastructure Damage",
-    date: "2025-09-14",
-    status: "Verified", // This one has been verified by others or an analyst
-    details: "The small wooden bridge connecting to the village has been washed away by the strong currents.",
-    location: { lat: 22.5726, lng: 88.3639 } // Example: Kolkata
-  },
-  {
-    id: "REP-004",
-    userName: "Sanjay Patel",
-    userEmail: "sanjay.p@example.com",
-    reportType: "Coastal Flooding",
-    date: "2025-09-14",
-    status: "Resolved", // Perhaps the water receded here
-    details: "Yesterday, the water was flooding the streets, but it has now receded.",
-    location: { lat: 19.0760, lng: 72.8777 } // Example: Mumbai
-  },
-  {
-    id: "REP-005",
-    userName: "Meena Iyer",
-    userEmail: "meena.i@example.com",
-    reportType: "Unusual Tide",
-    date: "2025-09-13",
-    status: "Verified",
-    details: "The sea pulled back much further than normal a couple of days ago. It was very strange.",
-    location: { lat: 13.0827, lng: 80.2707 } 
-
-},]
-
-// --- End of Mock Data ---
+import { REPORT_API_ENDPOINT } from "../utils/constant";
 
 const Dashboard = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Simulate fetching data from an API
   useEffect(() => {
-    const fetchReports = () => {
-      // Simulate a network delay
-      setTimeout(() => {
-        try {
-          // In a real app, you'd make an API call here, e.g., using fetch() or axios
-          // const response = await fetch('/api/reports');
-          // const data = await response.json();
-          setReports(mockReportsData);
-          setLoading(false);
-        } catch (err) {
-          setError("Failed to fetch reports. Please try again later.");
-          setLoading(false);
+    const fetchReports = async () => {
+      try {
+        const response = await axios.get(`${REPORT_API_ENDPOINT}/get`);
+        if (response.data && response.data.report) {
+          setReports(response.data.report);
+        } else {
+          throw new Error("Invalid data format received from server.");
         }
-      }, 1500); // 1.5 second delay
+      } catch (err) {
+        setError("Failed to fetch reports. Please try again later.");
+        console.error("API Fetch Error:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchReports();
-  }, []); // The empty array [] means this effect runs only once on component mount
+  }, []);
 
   if (loading) {
     return (
@@ -109,26 +54,43 @@ const Dashboard = () => {
           <table className="reports-table">
             <thead>
               <tr>
-                <th>Report ID</th>
-                <th>User Name</th>
-                <th>Report Type</th>
+                {/* 1. Added Image column header */}
+                <th>Image</th> 
+                <th>User</th>
+                <th>Report Title</th>
                 <th>Date</th>
                 <th>Status</th>
-                <th>Details</th>
+                <th>Description</th>
               </tr>
             </thead>
             <tbody>
               {reports.map((report) => (
-                <tr key={report.id}>
-                  <td data-label="Report ID">{report.id}</td>
-                  <td data-label="User Name">
+                <tr key={report._id}>
+                  {/* 2. Added table cell for the image */}
+                  <td data-label="Image">
+                    {/* Check if image and url exist before rendering */}
+                    {report.image && report.image.url ? (
+                      <img 
+                        src={report.image.url} 
+                        alt={report.title} 
+                        className="report-image" 
+                      />
+                    ) : (
+                      'No Image'
+                    )}
+                  </td>
+                  <td data-label="User">
                     <div className="user-info">
-                      {report.userName}
-                      <span className="user-email">{report.userEmail}</span>
+                      {report.createdBy ? report.createdBy.name : 'N/A'}
+                      <span className="user-email">
+                        {report.createdBy ? report.createdBy.email : 'N/A'}
+                      </span>
                     </div>
                   </td>
-                  <td data-label="Report Type">{report.reportType}</td>
-                  <td data-label="Date">{report.date}</td>
+                  <td data-label="Report Title">{report.title}</td>
+                  <td data-label="Date">
+                    {new Date(report.createdAt).toLocaleDateString()}
+                  </td>
                   <td data-label="Status">
                     <span
                       className={`status-badge status-${report.status
@@ -138,8 +100,8 @@ const Dashboard = () => {
                       {report.status}
                     </span>
                   </td>
-                  <td data-label="Details" className="details-cell">
-                    {report.details}
+                  <td data-label="Description" className="details-cell">
+                    {report.description}
                   </td>
                 </tr>
               ))}

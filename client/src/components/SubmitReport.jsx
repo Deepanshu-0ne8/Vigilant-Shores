@@ -20,7 +20,7 @@ const titleOptions = [
   "Other",
 ];
 
-const severityOptions = ["Low", "Medium", "High"];
+const severityOptions = ["low", "medium", "high"];
 
 const SubmitReport = () => {
   const [loadingsub, setLoadingsub] = useState(false);
@@ -108,24 +108,32 @@ const SubmitReport = () => {
       return;
     }
 
+    const geoJsonLocation = {
+      type: 'Point',
+      coordinates: [location.longitude, location.latitude] // IMPORTANT: Longitude comes first!
+    };
+
+    // 2. Stringify the object
+    const locationString = JSON.stringify(geoJsonLocation);
     setLoadingsub(true);
+
     try {
       const submissionData = new FormData();
       submissionData.append("title", formData.title);
       submissionData.append("description", formData.description);
       submissionData.append("severity", formData.severity);
-      submissionData.append("location", location);
-      submissionData.append("image", imageFile);
+      submissionData.append("location", locationString);
+      submissionData.append("reportImage", imageFile);
       submissionData.append("createdBy", userId);
       const response = await axios.post(
         `${REPORT_API_ENDPOINT}/create`,
         submissionData
       );
 
-      console.log("Registration successful:", response.data);
-      alert("Registration successful! Please log in.");
+      console.log("Report submitted:", response.data);
+      alert("Thank you for your contribution!!");
 
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Registration failed:", error);
       const errorMessage =

@@ -1,8 +1,10 @@
 // src/context/AuthContext.jsx
 
-import React, { createContext, useState, useEffect, useContext } from "react";
-import axios from "axios";
+import { createContext, useState, useEffect, useContext } from "react";
 import { USER_API_ENDPOINT } from "../utils/constant";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 const AuthContext = createContext(null);
 
@@ -20,8 +22,10 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await axios.get(`${USER_API_ENDPOINT}/profile`);
         setUser(response.data.data.user);
+        console.log(response.data.data.user);
       } catch (error) {
         setUser(null);
+        console.log("No active user session");
       } finally {
         setLoading(false);
       }

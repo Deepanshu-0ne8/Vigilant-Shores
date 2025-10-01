@@ -7,7 +7,10 @@ import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth(); // Use the login function from context
+  const { user,login } = useAuth(); // Use the login function from context
+  if(user){
+    navigate("/dashboard");
+  }
   const [formData, setFormData] = useState({
     email: "",
     password: "",
