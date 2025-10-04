@@ -1,5 +1,5 @@
 import Report from "../models/reports.model.js"
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { uploadrepOnCloudinary } from "../utils/cloudinary.js";
 import mongoose from "mongoose";
 
 export const createReport = async (req, res, next) => {
@@ -15,7 +15,7 @@ export const createReport = async (req, res, next) => {
         const localImagePath = req.file.path;
 
         // Upload image to Cloudinary
-        const cloudinaryResponse = await uploadOnCloudinary(localImagePath);
+        const cloudinaryResponse = await uploadrepOnCloudinary(localImagePath);
 
         if (!cloudinaryResponse || !cloudinaryResponse.url) {
             // In a real app, you'd handle the file deletion from the local system here if the upload failed
@@ -32,7 +32,7 @@ export const createReport = async (req, res, next) => {
             image: {
                 url: cloudinaryResponse.url // Store the URL returned by Cloudinary
             },
-            user: req.id
+            createdBy: req.id
         })
         
         // You might want to remove the temporary file from the local server after successful upload.
@@ -47,21 +47,21 @@ export const createReport = async (req, res, next) => {
     }
 }
 
-// export const getAllReports = async (req, res, next) => {
-//     try {
-//         const reports = await Report.find();
-//         res.status(200).json({
-//             status: 'success',
-//             data: reports
-//         });
-//     } catch (error) {
-//         next(error)
-//     }
-// }
+export const getAllReports = async (req, res, next) => {
+    try {
+        const reports = await Report.find();
+        res.status(200).json({
+            status: 'success',
+            data: reports
+        });
+    } catch (error) {
+        next(error)
+    }
+}
 
 //changed get all reports to get reports by user
 
-export const getAllReports = async (req, res,next) => {
+export const getAllReportsOfUser = async (req, res,next) => {
     try {
         const userId = req.id;
         const report = await Report.find({ createdBy: userId }).populate({
@@ -129,3 +129,80 @@ export const deleteReport = async (req, res, next) => {
         next(error)
     }
 }
+
+export const updateReportStatusTOVerified = async (req, res, next) => {
+  try {
+    // Role-based access control
+    if (req.user.role === "citizen") {
+      return res.status(403).json({
+        status: "fail",
+        message: "You are not allowed to change the report status.",
+      });
+    }
+
+    const { id } = req.params;
+
+    // Find and update in one step
+    const report = await Report.findByIdAndUpdate(
+      id,
+      { status: "Verified" },
+      { new: true, runValidators: true }
+    );
+
+    // If no report found
+    if (!report) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Report not found.",
+      });
+    }
+
+    // Success response
+    res.status(200).json({
+      status: "success",
+      message: "Report verified successfully.",
+      data: report,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const updateReportStatusTOResolved = async (req, res, next) => {
+  try {
+    // Role-based access control
+    if (req.user.role === "citizen") {
+      return res.status(403).json({
+        status: "fail",
+        message: "You are not allowed to change the report status.",
+      });
+    }
+
+    const { id } = req.params;
+
+    // Find and update in one step
+    const report = await Report.findByIdAndUpdate(
+      id,
+      { status: "Resolved" },
+      { new: true, runValidators: true }
+    );
+
+    // If no report found
+    if (!report) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Report not found.",
+      });
+    }
+
+    // Success response
+    res.status(200).json({
+      status: "success",
+      message: "Report resolved successfully.",
+      data: report,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -8,7 +8,7 @@ export const signUp = async (req, res, next) => {
     const session = await mongoose.startSession();
 
     try {
-        const { name, email, password, role } = req.body;
+        const { userName, email, password, role } = req.body;
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -23,9 +23,7 @@ export const signUp = async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const user = new User({
-            name,
-            email,
-            role,
+            ...req.body,
             password: hashedPassword
         });
         await user.save({ session });
@@ -111,20 +109,3 @@ export const signOut = async (req, res, next) => {
         next(error);
     }
 };
-export const getProfile = async (req, res, next) => {
-    try {
-        // If the request reaches this point, the `protect` middleware has already
-        // verified the JWT and attached the user's data to `req.user`.
-
-        // All we need to do is send that user object back to the client.
-        res.status(200).json({
-            success: true,
-            data: {
-                user: req.user
-            }
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
