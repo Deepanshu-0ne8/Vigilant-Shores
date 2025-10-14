@@ -7,8 +7,8 @@ const userRouter = express.Router();
 
 userRouter.get('/profile', authorize, getProfile);
 
-userRouter.patch('/', authorize, upload.single('displayPic'), updateProfile);
+userRouter.patch('/profile/update', authorize, upload.single('displayPic'), updateProfile);
 
-userRouter.delete('/', authorize, removeDp);
+userRouter.delete('/profile/deleteDp', authorize, removeDp);
 
 export default userRouter;
