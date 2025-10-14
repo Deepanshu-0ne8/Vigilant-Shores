@@ -81,6 +81,7 @@ export const updateProfile = async (req, res, next) => {
       data: req.user.toObject(),
     });
   } catch (error) {
+    console.error("Error updating profile:", error);
     next(error);
   }
 };
