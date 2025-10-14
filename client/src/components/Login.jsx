@@ -4,11 +4,10 @@ import "./Login.css";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 
-
 const Login = () => {
   const navigate = useNavigate();
-  const { user,login } = useAuth(); // Use the login function from context
-  if(user){
+  const { user, login } = useAuth(); // Use the login function from context
+  if (user) {
     navigate("/dashboard");
   }
   const [formData, setFormData] = useState({
@@ -44,7 +43,7 @@ const Login = () => {
 
     setLoading(true);
     try {
-      // 3. Instead of axios, call the context's login function
+      // Call the context's login function with email and password
       await login(formData.email, formData.password);
 
       // If login is successful, the user state is now updated globally.
@@ -64,9 +63,17 @@ const Login = () => {
     <div className="relative">
       <div className="absolute top-6 left-6">
         <Link to="/" className="text-2xl font-bold text-[#1E3A8A]">
-          <div className='flex items-center gap-2'>
-            <span><img className='w-12 h-12 border rounded-full' src="/logo.png" alt="Logo" /></span>
-            <span>Vigilant<span className='text-blue-400'>Shores</span></span>
+          <div className="flex items-center gap-2">
+            <span>
+              <img
+                className="w-12 h-12 border rounded-full"
+                src="/logo.png"
+                alt="Logo"
+              />
+            </span>
+            <span>
+              Vigilant<span className="text-blue-400">Shores</span>
+            </span>
           </div>
         </Link>
       </div>

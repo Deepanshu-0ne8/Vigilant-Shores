@@ -3,13 +3,14 @@ import "./SignUp.css";
 import { FaUser, FaEnvelope, FaLock, FaUserTag } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { USER_API_ENDPOINT } from "../utils/constant";
+import { AUTH_API_ENDPOINT } from "../utils/constant";
 
 const Signup = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
+    userName: "",
     email: "",
     role: "",
     password: "",
@@ -30,6 +31,7 @@ const Signup = () => {
     const newErrors = {};
     // Correction 1: Updated validation message for clarity
     if (!formData.name) newErrors.name = "Name is required";
+    if (!formData.userName) newErrors.userName = "Username is required";
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -56,7 +58,7 @@ const Signup = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${USER_API_ENDPOINT}/register`,
+        `${AUTH_API_ENDPOINT}/register`,
         formData
       );
 
@@ -115,6 +117,22 @@ const Signup = () => {
                 onChange={handleChange}
               />
               {errors.name && <p className="error-text">{errors.name}</p>}
+            </div>
+
+            {/* Username Field */}
+            <div className="input-group">
+              <FaUser className="input-icon" />
+              <input
+                type="text"
+                name="userName"
+                className="input-field"
+                placeholder="Username"
+                value={formData.userName}
+                onChange={handleChange}
+              />
+              {errors.userName && (
+                <p className="error-text">{errors.userName}</p>
+              )}
             </div>
 
             {/* Email Field */}
