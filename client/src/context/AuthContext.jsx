@@ -1,7 +1,7 @@
 // src/context/AuthContext.jsx
 
 import { createContext, useState, useEffect, useContext } from "react";
-import { USER_API_ENDPOINT } from "../utils/constant";
+import { AUTH_API_ENDPOINT, USER_API_ENDPOINT } from "../utils/constant";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -20,7 +20,9 @@ export const AuthProvider = ({ children }) => {
     // This function checks for an existing session on initial load
     const checkUserSession = async () => {
       try {
-        const response = await axios.get(`${USER_API_ENDPOINT}/profile`);
+        const response = await axios.get(`${USER_API_ENDPOINT}/profile`, {
+          withCredentials: true,
+        });
         setUser(response.data.data.user);
         console.log(response.data.data.user);
       } catch (error) {
@@ -33,10 +35,9 @@ export const AuthProvider = ({ children }) => {
     checkUserSession();
   }, []);
 
-  // --- ADD THIS NEW LOGIN FUNCTION ---
+  // Login function - backend expects email and password
   const login = async (email, password) => {
-    // The 'try...catch' will be handled by the Login component that calls this function
-    const response = await axios.post(`${USER_API_ENDPOINT}/signin`, {
+    const response = await axios.post(`${AUTH_API_ENDPOINT}/signin`, {
       email,
       password,
     });
@@ -50,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(`${USER_API_ENDPOINT}/signout`);
+      await axios.post(`${AUTH_API_ENDPOINT}/signout`);
       setUser(null);
     } catch (error) {
       console.error("Failed to log out", error);
